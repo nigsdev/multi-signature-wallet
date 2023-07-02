@@ -25,12 +25,12 @@ contract MetaMultiSigWallet {
     uint public chainId;
 
     constructor(uint256 _chainId, address[] memory _owners, uint _signaturesRequired) {
-        require(_signaturesRequired > 0, "constructor: must be non-zero sigs required");
+        require(_signaturesRequired > 0, "constructor validation: must be non-zero sigs required");
         signaturesRequired = _signaturesRequired;
         for (uint i = 0; i < _owners.length; i++) {
             address owner = _owners[i];
-            require(owner != address(0), "constructor: zero address");
-            require(!isOwner[owner], "constructor: owner not unique");
+            require(owner != address(0), "constructor validation: zero address");
+            require(!isOwner[owner], "constructor validation: owner not unique");
             isOwner[owner] = true;
             emit Owner(owner, isOwner[owner]);
         }
@@ -44,7 +44,7 @@ contract MetaMultiSigWallet {
 
     function addSigner(address newSigner, uint256 newSignaturesRequired) public onlySelf {
         require(newSigner != address(0), "addSigner: zero address");
-        require(!isOwner[newSigner], "addSigner: owner not unique");
+        require(!isOwner[newSigner], "addSigner: owners provided are not unique");
         require(newSignaturesRequired > 0, "addSigner: must be non-zero sigs required");
         isOwner[newSigner] = true;
         signaturesRequired = newSignaturesRequired;
